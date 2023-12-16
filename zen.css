@@ -1,0 +1,5 @@
+body #related,
+#items,
+[page-subtype='home'] {
+  display: none;
+}
