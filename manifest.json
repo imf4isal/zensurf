@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Zen Surf",
+  "description": "Use social medias and youtube without distractions.",
+  "version": "1.0",
+  "icons": {
+    "16": "images/icon-16.png",
+    "32": "images/icon-32.png",
+    "128": "images/icon-128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "images/icon-16.png",
+      "32": "images/icon-32.png",
+      "128": "images/icon-128.png"
+    }
+  },
+  "permissions": ["activeTab", "scripting"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+B"
+      }
+    }
+  }
+}
