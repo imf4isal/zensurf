@@ -1,4 +1,7 @@
 body #related,
+#comments,
+#guide,
+#guide-button,
 #items,
 [page-subtype='home'] {
   display: none;
