@@ -5,17 +5,16 @@ chrome.runtime.onInstalled.addListener(() => {
     text: 'OFF',
   });
 });
-const extensionURL = 'https://www.youtube.com';
+const extensionURL = 'youtube.com';
 
 chrome.action.onClicked.addListener(async (tab) => {
-  if (tab.url.startsWith(extensionURL)) {
+  if (tab.url.includes(extensionURL)) {
     chrome.storage.local.get(['state'], async function (result) {
       const prevState = result.state;
 
       const nextState = prevState === 'ON' ? 'OFF' : 'ON';
 
       chrome.storage.local.set({ state: nextState });
-
       await chrome.action.setBadgeText({
         tabId: tab.id,
         text: nextState,
@@ -23,12 +22,14 @@ chrome.action.onClicked.addListener(async (tab) => {
 
       if (nextState === 'ON') {
         // Insert the CSS file when the user turns the extension on
+        console.log('insert');
         await chrome.scripting.insertCSS({
           files: ['zen.css'],
           target: { tabId: tab.id },
         });
       } else if (nextState === 'OFF') {
         // Remove the CSS file when the user turns the extension off
+
         await chrome.scripting.removeCSS({
           files: ['zen.css'],
           target: { tabId: tab.id },
@@ -39,25 +40,30 @@ chrome.action.onClicked.addListener(async (tab) => {
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  console.log(changeInfo);
-
-  // chrome.storage.local.get('state', function (result) {
-  //   console.log(result);
-  // });
-  if (changeInfo.url && changeInfo.url.startsWith(extensionURL)) {
-    chrome.storage.local.get(['state'], function (result) {
+  if (changeInfo.url && changeInfo.url.includes(extensionURL)) {
+    chrome.storage.local.get(['state'], async function (result) {
       if (result.state === 'ON') {
-        chrome.scripting.insertCSS({
+        await chrome.scripting.insertCSS({
           files: ['zen.css'],
           target: { tabId: tab.id },
         });
+        await chrome.action.setBadgeText({
+          tabId: tab.id,
+          text: 'ON',
+        });
+      } else {
+        await chrome.action.setBadgeText({
+          tabId: tab.id,
+          text: 'OFF',
+        });
       }
+    });
+  } else {
+    chrome.storage.local.get(['state'], async function (result) {
+      await chrome.action.setBadgeText({
+        tabId: tab.id,
+        text: result.state,
+      });
     });
   }
 });
-
-/*
-
-Okay, the code is not working still
-
-*/
