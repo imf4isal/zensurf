@@ -22,7 +22,7 @@ chrome.action.onClicked.addListener(async (tab) => {
 
       if (nextState === 'ON') {
         // Insert the CSS file when the user turns the extension on
-        console.log('insert');
+
         await chrome.scripting.insertCSS({
           files: ['zen.css'],
           target: { tabId: tab.id },
@@ -30,10 +30,13 @@ chrome.action.onClicked.addListener(async (tab) => {
       } else if (nextState === 'OFF') {
         // Remove the CSS file when the user turns the extension off
 
-        await chrome.scripting.removeCSS({
-          files: ['zen.css'],
+        await chrome.scripting.insertCSS({
+          files: ['zenOff.css'],
           target: { tabId: tab.id },
         });
+
+        // @TODO: Fix style issue
+        // chrome.tabs.reload(tab.id);
       }
     });
   }

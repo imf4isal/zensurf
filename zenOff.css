@@ -1,0 +1,9 @@
+body #related,
+#comments,
+#guide,
+#guide-button,
+.ytd-mini-guide-renderer,
+#items,
+[page-subtype='home'] {
+  display: initial;
+}
