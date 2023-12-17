@@ -14,6 +14,7 @@ Experience a focused and distraction-free journey across social media and YouTub
 
 - Then, click the "Extensions" in your chrome
 - Go the "Manage Extensions" option from there
+- Enable Developer Mode
 - Select "Load Unpacked"
 - Select the previously extracted folder
 - Upload
