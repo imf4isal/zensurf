@@ -7,6 +7,9 @@ Experience a focused and distraction-free journey across social media and YouTub
 ## How to install it in your computer?
 
 - Download the repo as zip
+![IMG_20231217_173239](https://github.com/imf4isal/zensurf/assets/55425194/f5d4a6d9-7f52-438e-b3cd-78eeab44ec00)
+
+
 - Extract the folder
 
 - Then, click the "Extensions" in your chrome
