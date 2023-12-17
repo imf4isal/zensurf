@@ -37,3 +37,27 @@ chrome.action.onClicked.addListener(async (tab) => {
     });
   }
 });
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  console.log(changeInfo);
+
+  // chrome.storage.local.get('state', function (result) {
+  //   console.log(result);
+  // });
+  if (changeInfo.url && changeInfo.url.startsWith(extensionURL)) {
+    chrome.storage.local.get(['state'], function (result) {
+      if (result.state === 'ON') {
+        chrome.scripting.insertCSS({
+          files: ['zen.css'],
+          target: { tabId: tab.id },
+        });
+      }
+    });
+  }
+});
+
+/*
+
+Okay, the code is not working still
+
+*/

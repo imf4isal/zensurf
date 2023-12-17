@@ -18,7 +18,8 @@
       "128": "images/icon-128.png"
     }
   },
-  "permissions": ["activeTab", "scripting", "storage"],
+  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": ["*://*.youtube.com/"],
   "commands": {
     "_execute_action": {
       "suggested_key": {
