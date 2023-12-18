@@ -34,16 +34,13 @@ chrome.action.onClicked.addListener(async (tab) => {
           files: ['zenOff.css'],
           target: { tabId: tab.id },
         });
-
-        // @TODO: Fix style issue
-        // chrome.tabs.reload(tab.id);
       }
     });
   }
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.url && changeInfo.url.includes(extensionURL)) {
+  if (tab.url && tab.url.includes(extensionURL)) {
     chrome.storage.local.get(['state'], async function (result) {
       if (result.state === 'ON') {
         await chrome.scripting.insertCSS({
