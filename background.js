@@ -8,62 +8,49 @@ chrome.runtime.onInstalled.addListener(() => {
 const extensionURL = 'youtube.com';
 
 chrome.action.onClicked.addListener(async (tab) => {
-  if (tab.url.includes(extensionURL)) {
-    chrome.storage.local.get(['state'], async function (result) {
-      const prevState = result.state;
+  const { url, id: tabId } = tab;
 
-      const nextState = prevState === 'ON' ? 'OFF' : 'ON';
+  if (url.includes(extensionURL)) {
+    const prevState = await getState();
+    const nextState = prevState === 'ON' ? 'OFF' : 'ON';
 
-      chrome.storage.local.set({ state: nextState });
-      await chrome.action.setBadgeText({
-        tabId: tab.id,
-        text: nextState,
-      });
+    if (nextState === 'ON') injectStyle(tabId, 'zen.css');
+    else injectStyle(tabId, 'zenOff.css');
+    // removing style creates bug - https://github.com/imf4isal/zensurf/issues/6
 
-      if (nextState === 'ON') {
-        // Insert the CSS file when the user turns the extension on
-
-        await chrome.scripting.insertCSS({
-          files: ['zen.css'],
-          target: { tabId: tab.id },
-        });
-      } else if (nextState === 'OFF') {
-        // Remove the CSS file when the user turns the extension off
-
-        await chrome.scripting.insertCSS({
-          files: ['zenOff.css'],
-          target: { tabId: tab.id },
-        });
-      }
-    });
+    chrome.storage.local.set({ state: nextState });
+    updateBadgeText(tabId, nextState);
   }
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (tab.url && tab.url.includes(extensionURL)) {
-    chrome.storage.local.get(['state'], async function (result) {
-      if (result.state === 'ON') {
-        await chrome.scripting.insertCSS({
-          files: ['zen.css'],
-          target: { tabId: tab.id },
-        });
-        await chrome.action.setBadgeText({
-          tabId: tab.id,
-          text: 'ON',
-        });
-      } else {
-        await chrome.action.setBadgeText({
-          tabId: tab.id,
-          text: 'OFF',
-        });
-      }
-    });
-  } else {
-    chrome.storage.local.get(['state'], async function (result) {
-      await chrome.action.setBadgeText({
-        tabId: tab.id,
-        text: result.state,
-      });
-    });
-  }
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  const { url } = tab;
+  const state = await getState();
+
+  if (url && url.includes(extensionURL) && state === 'ON')
+    injectStyle(tabId, 'zen.css');
+  updateBadgeText(tabId, state);
 });
+
+function updateBadgeText(tabId, text) {
+  chrome.action.setBadgeText({
+    tabId,
+    text,
+  });
+}
+
+async function injectStyle(tabId, file) {
+  await chrome.scripting.insertCSS({
+    files: [file],
+    target: { tabId },
+  });
+}
+
+function getState() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(['state'], function ({ state }) {
+      resolve(state);
+      //@TODO: handle error
+    });
+  });
+}
