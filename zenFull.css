@@ -1,0 +1,11 @@
+#logo {
+    display: none;
+}
+
+#buttons.ytd-masthead {
+    display: none !important;
+}
+
+#secondary {
+    display: none;
+}

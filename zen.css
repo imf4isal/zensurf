@@ -6,5 +6,5 @@ body #related,
 #items,
 #yt_ai_summary_container,
 [page-subtype='home'] {
-  display: none;
+    display: none;
 }
