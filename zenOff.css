@@ -4,6 +4,8 @@ body #related,
 #guide-button,
 .ytd-mini-guide-renderer,
 #items,
+#yt_ai_summary_container,
+#secondary,
 [page-subtype='home'] {
   display: initial;
 }
